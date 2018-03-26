@@ -28,16 +28,21 @@ module.exports = class Requester extends Monitorable(Configurable(Component)) {
     }
 
     send(...args) {
-        if (args.length == 1 || typeof args[args.length - 1] != 'function') {
+        const hasCallback = 
+            'boolean' === typeof args[args.length - 1] &&
+            args[args.length - 1] === true &&
+            arg.length > 2 &&
+            'function' === typeof args[args.length - 2];
+        if (!hasCallback) {
             return new Promise((resolve, reject) => {
                 this.sock.send(...args, (err, res) => {
                     if (err) return reject(err);
-                    resolve(res);
+                    return resolve(res);
                 });
             });
         }
 
-        this.sock.send(...args);
+       return this.sock.send(...args);
     }
 
     get type() {

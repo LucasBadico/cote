@@ -2,6 +2,8 @@
 
 cote — A Node.js library for building zero-configuration microservices
 ====
+Cote with add params for use of callbacks
+--------
 
 [![npm version](https://badge.fury.io/js/cote.svg)](https://badge.fury.io/js/cote)
 [![Build Status](https://travis-ci.org/dashersw/cote.svg?branch=master)](https://travis-ci.org/dashersw/cote)
