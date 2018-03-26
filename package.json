@@ -33,7 +33,7 @@
     "node": ">=v4.0.0"
   },
   "dependencies": {
-    "@dashersw/axon": "2.0.5",
+    "@LucasBadico/axon": "https://github.com/LucasBadico/axon.git",
     "@dashersw/node-discover": "^0.8.2",
     "charm": "1.0.2",
     "colors": "1.1.2",

@@ -29,8 +29,12 @@ module.exports = class PendingBalancedRequester extends Requester {
         }
 
         const rv = Requester.prototype.send.apply(this, args);
+        console.log('RV?', rv, sock.socks.length);
 
-        if (!sock.socks.length) return rv;
+        if (!sock.socks.length) {
+            console.log('RV!', rv);
+            return rv;
+        }
 
         const sentSock = sock.socks[sock.n - 1];
 

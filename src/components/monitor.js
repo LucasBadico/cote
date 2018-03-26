@@ -3,7 +3,7 @@ const _ = require('lodash');
 const charm = require('charm')();
 const Configurable = require('./configurable');
 const Component = require('./component');
-const axon = require('@dashersw/axon');
+const axon = require('@LucasBadico/axon');
 
 module.exports = class Monitor extends Configurable(Component) {
     constructor(advertisement, discoveryOptions, stream) {
