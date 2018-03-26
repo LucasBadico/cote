@@ -48,9 +48,8 @@ module.exports = class Responder extends Configurable(Component) {
 
             if (hasCallback && 'function' === typeof rv.then) {
                 const cb = args[args.length - 2];
-                return rv.then((val) => cb(null, val)).catch(cb);
+                rv.then((val) => cb(null, val)).catch(cb);
             }
-            return rv
         });
     }
 

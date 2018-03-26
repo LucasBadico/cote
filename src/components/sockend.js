@@ -54,12 +54,13 @@ module.exports = class Sockend extends Configurable(Component) {
                             'function' === typeof args[args.length - 2];
 
                         if (args.length === 0 && typeof data === 'function') {
-                            return requester.send({type: topic}, args[0], true);
+                            const modfiedData = { type: topic }
+                            requester.send(modfiedData, args[0], true);
+                            this.requesterTransformators.forEach((transFn) => transFn(modfiedData, socket));
                         }
 
                         this.requesterTransformators.forEach((transFn) => transFn(data, socket));
-
-                        return requester.send(Object.assign(data, { type: topic }), ...args);
+                        requester.send(Object.assign(data, { type: topic }), ...args);
                     });
                 });
             };
