@@ -28,11 +28,13 @@ module.exports = class Requester extends Monitorable(Configurable(Component)) {
     }
 
     send(...args) {
-        const hasCallback = 'function' === typeof args[args.length - 2] &&
-                'boolean' === typeof args[args.length - 1] &&
-                args[args.length - 1];
+        const hasCallback = 
+            'boolean' === typeof args[args.length - 1] &&
+            args[args.length - 1] === true &&
+            arg.length > 2 &&
+            'function' === typeof args[args.length - 2];
 
-        if (args.length == 1 || hasCallback) {
+        if (args.length == 1 || !hasCallback) {
             return new Promise((resolve, reject) => {
                 this.sock.send(...args, (err, res) => {
                     if (err) return reject(err);

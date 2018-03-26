@@ -46,17 +46,23 @@ module.exports = class Sockend extends Configurable(Component) {
 
             obj.requesterSocketHandler = (socket) => {
                 obj.advertisement.respondsTo.forEach((topic) => {
-                    socket.on(topic, (data, cb) => {
-                        if (typeof data == 'function' && typeof cb == 'undefined') {
-                            cb = data;
-                            data = {};
-                        }
+                    socket.on(topic, (data, ...args) => { // change this also
+                        // topic as type on first argument
 
-                        data.type = topic;
+                        // if last argument as true
+                        const hasCallback = 
+                            'boolean' === typeof args[args.length - 1] &&
+                            args[args.length - 1] === true &&
+                            arg.length > 1  &&
+                            'function' === typeof args[args.length - 2];
+
+                        if (args.length === 0 && typeof data === 'function') {
+                            return requester.send({type: topic}, args[0], true);
+                        }
 
                         this.requesterTransformators.forEach((transFn) => transFn(data, socket));
 
-                        requester.send(data, cb);
+                        requester.send({...data, type: topic }, ...args);
                     });
                 });
             };
