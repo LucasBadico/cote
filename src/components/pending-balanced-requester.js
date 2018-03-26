@@ -1,5 +1,5 @@
 const Requester = require('./requester');
-const _ = require('lodash');
+const _ = require('lodash'); // remove lodash
 const uuid = require('uuid');
 
 module.exports = class PendingBalancedRequester extends Requester {
@@ -19,6 +19,7 @@ module.exports = class PendingBalancedRequester extends Requester {
                 s.count = 0;
             });
 
+            // just counting the callback numbers
             _.forEach(sock.callbacks, function(cb) {
                 cb.sock && cb.sock.count++;
             });
