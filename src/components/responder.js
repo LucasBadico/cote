@@ -37,7 +37,9 @@ module.exports = class Responder extends Configurable(Component) {
     }
 
     on(type, listener) {
-        super.on(type, (...args) => {
+        super.on(type, (...args) => { // change here also
+
+            // he is thinking that my last arg is always a callback
             const rv = listener(...args);
 
             if (rv && typeof rv.then == 'function') {

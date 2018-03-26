@@ -13,7 +13,7 @@ module.exports = class PendingBalancedRequester extends Requester {
 
     send(...args) {
         const sock = this.sock;
-
+        // I also think that here is a point to change
         if (sock.socks.length) {
             sock.socks.forEach(function(s) {
                 s.count = 0;
