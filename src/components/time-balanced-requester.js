@@ -54,7 +54,9 @@ module.exports = class TimeBalancedRequester extends Requester {
     send(...args) {
         const id = this.requestId++;
 
-        const hasCallback = 'function' == typeof args[args.length - 1];
+        const hasCallback = 'function' === typeof args[args.length - 2] &&
+                'boolean' === typeof args[args.length - 1] &&
+                args[args.length - 1];
         if (hasCallback)
             this.callbacks[id] = args.pop();
         else {
