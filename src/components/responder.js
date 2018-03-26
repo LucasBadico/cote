@@ -1,3 +1,4 @@
+const R = require('ramda');
 const axon = require('@dashersw/axon');
 const portfinder = require('portfinder');
 const Configurable = require('./configurable');
@@ -39,9 +40,11 @@ module.exports = class Responder extends Configurable(Component) {
     on(type, listener) {
         super.on(type, (...args) => {
             const rv = listener(...args);
+            console.log('FROM RESPONDER', { type, listener, rv, args }, rv && typeof rv.then == 'function')
 
             if (rv && typeof rv.then == 'function') {
                 const cb = args.pop();
+                // if (typeof cb === 'function') 
                 rv.then((val) => cb(null, val)).catch(cb);
             }
         });
