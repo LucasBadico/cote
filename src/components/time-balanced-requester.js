@@ -54,12 +54,17 @@ module.exports = class TimeBalancedRequester extends Requester {
     send(...args) {
         const id = this.requestId++;
 
-        const hasCallback = 'function' == typeof args[args.length - 1];
+        const hasCallback = 
+            'boolean' === typeof args[args.length - 1] &&
+            args[args.length - 1] === true &&
+            arg.length > 2 &&
+            'function' === typeof args[args.length - 2];
         if (hasCallback)
-            this.callbacks[id] = args.pop();
+            this.callbacks[id] = args[args.length - 2];
         else {
             let resolve;
             let reject;
+            // this is a bit ugly
             this.callbacks[id] = new Promise((_resolve, _reject) => {
                 resolve = _resolve;
                 reject = _reject;
@@ -113,7 +118,7 @@ module.exports = class TimeBalancedRequester extends Requester {
 
         index = (socks[n] && socks[n].uuid) || 0; // save the index of selected socket
 
-        const cb = (...args) => {
+        const cb = (...args) => { // a resolver funtion
             const lastRequests = this.responders[index];
             if (lastRequests && lastRequests[id])
                 lastRequests[id].time = (new Date() - lastRequests[id].sent); // save response time
@@ -147,7 +152,7 @@ module.exports = class TimeBalancedRequester extends Requester {
             }, this.SAMPLE_INTERVAL);
         }
 
-        if (hasCallback) return super.send(...args, cb);
+        if (hasCallback) return super.send(...args, cb, true);
         else {
             originalPromise = super.send(...args);
             originalPromise.then((res) => {
