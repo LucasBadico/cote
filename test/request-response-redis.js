@@ -9,13 +9,13 @@ const { Requester, Responder } = require('../')();
 
 LogSuppress.init(console);
 
-test.cb(`Crash trying to use redis`, (t) => {
-    t.plan(1);
+test.cb(`Crash trying to use redis`, (it) => {
+    it.plan(1);
 
     const key = r.generate();
 
-    const requester = new Requester({ name: `${t.title}: ignore requester`, key });
-    const responder = new Responder({ name: `${t.title}: ignore responder`, key });
+    const requester = new Requester({ name: `${it.title}: ignore requester`, key });
+    const responder = new Responder({ name: `${it.title}: ignore responder`, key });
 
         const originalListeners = process.listeners('uncaughtException');
 
@@ -28,7 +28,7 @@ test.cb(`Crash trying to use redis`, (t) => {
             throw err;
         }
 
-        t.pass();
-        t.end();
+        it.pass();
+        it.end();
     });
 });

@@ -8,78 +8,78 @@ const { PendingBalancedRequester, Responder } = require('../')({ environment });
 
 LogSuppress.init(console);
 
-test('Supports environment', (t) => {
-    t.is(PendingBalancedRequester.environment, `${environment}:`);
-    t.is(Responder.environment, `${environment}:`);
+test('Supports environment', (it) => {
+    it.is(PendingBalancedRequester.environment, `${environment}:`);
+    it.is(Responder.environment, `${environment}:`);
 });
 
-test.cb('Supports simple req&res', (t) => {
-    t.plan(1);
+test.cb('Supports simple req&res', (it) => {
+    it.plan(1);
 
-    const requester = new PendingBalancedRequester({ name: `${t.title}: simple requester` });
-    const responder = new Responder({ name: `${t.title}: simple responder` });
+    const requester = new PendingBalancedRequester({ name: `${it.title}: simple requester` });
+    const responder = new Responder({ name: `${it.title}: simple responder` });
 
     requester.send({ type: 'test', args: [1, 2, 3] });
 
     responder.on('test', (req) => {
-        t.deepEqual(req.args, [1, 2, 3]);
-        t.end();
+        it.deepEqual(req.args, [1, 2, 3]);
+        it.end();
     });
 });
 
-test.cb('Supports keys', (t) => {
+test.cb('Supports keys', (it) => {
     const key = r.generate();
 
-    const requester = new PendingBalancedRequester({ name: `${t.title}: keyed requester`, key });
-    const responder = new Responder({ name: `${t.title}: keyed responder`, key });
+    const requester = new PendingBalancedRequester({ name: `${it.title}: keyed requester`, key });
+    const responder = new Responder({ name: `${it.title}: keyed responder`, key });
 
     requester.send({ type: 'test', args: [1, 2, 4] });
 
     responder.on('test', (req) => {
-        t.deepEqual(req.args, [1, 2, 4]);
-        t.end();
+        it.deepEqual(req.args, [1, 2, 4]);
+        it.end();
     });
 });
 
-test.cb('Supports namespaces', (t) => {
+test.cb('Supports namespaces', (it) => {
     const namespace = r.generate();
 
-    const requester = new PendingBalancedRequester({ name: `${t.title}: ns requester`, namespace });
-    const responder = new Responder({ name: `${t.title}: ns responder`, namespace });
+    const requester = new PendingBalancedRequester({ name: `${it.title}: ns requester`, namespace });
+    const responder = new Responder({ name: `${it.title}: ns responder`, namespace });
 
     requester.send({ type: 'test', args: [1, 2, 5] });
 
     responder.on('test', (req) => {
-        t.deepEqual(req.args, [1, 2, 5]);
-        t.end();
+        it.deepEqual(req.args, [1, 2, 5]);
+        it.end();
     });
 });
 
-test.cb('Supports keys & namespaces', (t) => {
+test.cb('Supports keys & namespaces', (it) => {
     const key = r.generate();
     const namespace = r.generate();
 
-    const requester = new PendingBalancedRequester({ name: `PBR ${t.title}: kns requester`, key, namespace });
-    const responder = new Responder({ name: `PBR ${t.title}: kns responder`, key, namespace });
+    const requester = new PendingBalancedRequester({ name: `PBR ${it.title}: kns requester`, key, namespace });
+    const responder = new Responder({ name: `PBR ${it.title}: kns responder`, key, namespace });
 
     requester.send({ type: 'test', args: [1, 2, 6] });
 
     responder.on('test', (req) => {
-        t.deepEqual(req.args, [1, 2, 6]);
-        t.end();
+        it.deepEqual(req.args, [1, 2, 6]);
+        it.end();
     });
 });
 
-test.cb('Supports request balancing', (t) => {
+test.cb('Supports request balancing', (it) => {
     const key = r.generate();
     const namespace = r.generate();
 
-    t.plan(30);
+    it.plan(30);
 
-    const requester = new PendingBalancedRequester({ name: `PBR ${t.title}: kns requester`, key, namespace });
-    const responder = new Responder({ name: `PBR ${t.title}: kns responder`, key, namespace });
-    const responder2 = new Responder({ name: `PBR ${t.title}: kns responder 2`, key, namespace });
-    const responder3 = new Responder({ name: `PBR ${t.title}: kns responder 3`, key, namespace });
+    const requester = new PendingBalancedRequester({ name: `PBR ${it.title}: kns requester`, key, namespace });
+    const responder = new Responder({ name: `PBR ${it.title}: kns responder`, key, namespace });
+    const responder2 = new Responder({ name: `PBR ${it.title}: kns responder 2`, key, namespace });
+    const responder3 = new Responder({ name: `PBR ${it.title}: kns responder 3`, key, namespace });
 
     const responders = [responder, responder2, responder3];
 
@@ -90,12 +90,12 @@ test.cb('Supports request balancing', (t) => {
     async.timesLimit(30, 5,
         (time, done) => {
             requester.send({ type: 'test', args: [3, 2, time] }, (res) => {
-                t.deepEqual(res, [3, 2, time]);
+                it.deepEqual(res, [3, 2, time]);
 
                 done();
             });
         },
         (err, results) => {
-            t.end();
+            it.end();
         });
 });

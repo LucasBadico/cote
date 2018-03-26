@@ -8,13 +8,13 @@ const { TimeBalancedRequester, Responder } = require('../')({ environment });
 
 LogSuppress.init(console);
 
-test.cb('Supports disconnection', (t) => {
+test.cb('Supports disconnection', (it) => {
     const key = r.generate();
 
-    const requester = new TimeBalancedRequester({ name: `${t.title}: keyed requester`, key });
-    const responder = new Responder({ name: `${t.title}: keyed responder`, key });
-    const responder2 = new Responder({ name: `${t.title}: keyed responder2`, key });
-    const responder3 = new Responder({ name: `${t.title}: keyed responder3`, key });
+    const requester = new TimeBalancedRequester({ name: `${it.title}: keyed requester`, key });
+    const responder = new Responder({ name: `${it.title}: keyed responder`, key });
+    const responder2 = new Responder({ name: `${it.title}: keyed responder2`, key });
+    const responder3 = new Responder({ name: `${it.title}: keyed responder3`, key });
 
     requester.CALCULATION_TIMEOUT = 1000;
 
@@ -34,7 +34,7 @@ test.cb('Supports disconnection', (t) => {
     }));
 
     async.timesLimit(10, 2, (time, done) => {
-        if (time == 9) t.end();
+        if (time == 9) it.end();
         requester.send({ type: 'test', args: [5, 2, time] }).catch(() => {});
         setTimeout(() => done(), 500);
     }, (err, results) => { });

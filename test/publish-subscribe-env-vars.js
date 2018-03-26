@@ -14,17 +14,17 @@ const { Publisher, Subscriber } = require('../');
 
 LogSuppress.init(console);
 
-test('Supports environment', (t) => {
-    t.is(Publisher.environment, `${environment}:`);
-    t.is(Subscriber.environment, `${environment}:`);
+test('Supports environment', (it) => {
+    it.is(Publisher.environment, `${environment}:`);
+    it.is(Subscriber.environment, `${environment}:`);
 });
 
-test.cb('Supports simple pub&sub with env vars', (t) => {
-    t.plan(2);
+test.cb('Supports simple pub&sub with env vars', (it) => {
+    it.plan(2);
 
-    const publisher = new Publisher({ name: `${t.title}: publisher` });
-    const subscriber = new Subscriber({ name: `${t.title}: subscriber` });
-    const subscriber2 = new Subscriber({ name: `${t.title}: subscriber2` });
+    const publisher = new Publisher({ name: `${it.title}: publisher` });
+    const subscriber = new Subscriber({ name: `${it.title}: subscriber` });
+    const subscriber2 = new Subscriber({ name: `${it.title}: subscriber2` });
 
     async.each(
         [subscriber, subscriber2],
@@ -33,25 +33,25 @@ test.cb('Supports simple pub&sub with env vars', (t) => {
     );
 
     const tester = function(done, req) {
-        t.deepEqual(req.args, [1, 2, 3]);
+        it.deepEqual(req.args, [1, 2, 3]);
         done();
     };
 
     async.each(
         [subscriber, subscriber2],
         (s, done) => s.on('test', tester.bind(s, done)),
-        (_) => t.end()
+        (_) => it.end()
     );
 });
 
-test.cb('Supports keys with env vars', (t) => {
+test.cb('Supports keys with env vars', (it) => {
     const key = r.generate();
 
-    t.plan(2);
+    it.plan(2);
 
-    const publisher = new Publisher({ name: `${t.title}: keyed publisher`, key });
-    const subscriber = new Subscriber({ name: `${t.title}: keyed subscriber`, key });
-    const subscriber2 = new Subscriber({ name: `${t.title}: keyed subscriber2`, key });
+    const publisher = new Publisher({ name: `${it.title}: keyed publisher`, key });
+    const subscriber = new Subscriber({ name: `${it.title}: keyed subscriber`, key });
+    const subscriber2 = new Subscriber({ name: `${it.title}: keyed subscriber2`, key });
 
     async.each(
         [subscriber, subscriber2],
@@ -60,7 +60,7 @@ test.cb('Supports keys with env vars', (t) => {
     );
 
     const tester = function(done, req) {
-        t.deepEqual(req.args, [1, 2, 4]);
+        it.deepEqual(req.args, [1, 2, 4]);
 
         done();
     };
@@ -68,21 +68,21 @@ test.cb('Supports keys with env vars', (t) => {
     async.each(
         [subscriber, subscriber2],
         (s, done) => s.on('test', tester.bind(s, done)),
-        (_) => t.end()
+        (_) => it.end()
     );
 });
 
-test.cb('Supports namespaces with env vars', (t) => {
+test.cb('Supports namespaces with env vars', (it) => {
     const namespace = r.generate();
 
-    t.plan(2);
+    it.plan(2);
 
-    const publisher = new Publisher({ name: `${t.title}: ns publisher`, namespace });
-    const subscriber = new Subscriber({ name: `${t.title}: ns subscriber`, namespace });
-    const subscriber2 = new Subscriber({ name: `${t.title}: ns subscriber2`, namespace });
+    const publisher = new Publisher({ name: `${it.title}: ns publisher`, namespace });
+    const subscriber = new Subscriber({ name: `${it.title}: ns subscriber`, namespace });
+    const subscriber2 = new Subscriber({ name: `${it.title}: ns subscriber2`, namespace });
 
     const tester = function(done, req) {
-        t.deepEqual(req.args, [1, 2, 5]);
+        it.deepEqual(req.args, [1, 2, 5]);
 
         done();
     };
@@ -96,22 +96,22 @@ test.cb('Supports namespaces with env vars', (t) => {
     async.each(
         [subscriber, subscriber2],
         (s, done) => s.on('test', tester.bind(s, done)),
-        (_) => t.end()
+        (_) => it.end()
     );
 });
 
-test.cb('Supports keys & namespaces with env vars', (t) => {
+test.cb('Supports keys & namespaces with env vars', (it) => {
     const key = r.generate();
     const namespace = r.generate();
 
-    t.plan(2);
+    it.plan(2);
 
-    const publisher = new Publisher({ name: `${t.title}: kns publisher`, key, namespace });
-    const subscriber = new Subscriber({ name: `${t.title}: kns subscriber`, key, namespace });
-    const subscriber2 = new Subscriber({ name: `${t.title}: kns subscriber2`, key, namespace });
+    const publisher = new Publisher({ name: `${it.title}: kns publisher`, key, namespace });
+    const subscriber = new Subscriber({ name: `${it.title}: kns subscriber`, key, namespace });
+    const subscriber2 = new Subscriber({ name: `${it.title}: kns subscriber2`, key, namespace });
 
     const tester = function(done, req) {
-        t.deepEqual(req.args, [1, 2, 6]);
+        it.deepEqual(req.args, [1, 2, 6]);
 
         done();
     };
@@ -119,7 +119,7 @@ test.cb('Supports keys & namespaces with env vars', (t) => {
     async.each(
         [subscriber, subscriber2],
         (s, done) => s.on('test', tester.bind(s, done)),
-        (_) => t.end()
+        (_) => it.end()
     );
 
     async.each(

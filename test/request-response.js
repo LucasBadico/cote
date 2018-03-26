@@ -7,86 +7,86 @@ const { Requester, Responder } = require('../')();
 
 LogSuppress.init(console);
 
-test('Has no environment', (t) => {
-    t.is(Requester.environment, '');
-    t.is(Responder.environment, '');
+test('Has no environment', (it) => {
+    it.is(Requester.environment, '');
+    it.is(Responder.environment, '');
 });
 
-test.cb(`Ignore messages that don't include type`, (t) => {
-    t.plan(1);
+test.cb(`Ignore messages that don't include type`, (it) => {
+    it.plan(1);
 
     const key = r.generate();
 
-    const requester = new Requester({ name: `${t.title}: ignore requester`, key });
-    const responder = new Responder({ name: `${t.title}: ignore responder`, key });
+    const requester = new Requester({ name: `${it.title}: ignore requester`, key });
+    const responder = new Responder({ name: `${it.title}: ignore responder`, key });
 
     requester.send('This should be ignored');
 
     responder.sock.on('message', (req) => {
-        t.falsy(req.type);
-        t.end();
+        it.falsy(req.type);
+        it.end();
     });
 });
 
-test.cb('Supports simple req&res', (t) => {
-    t.plan(1);
+test.cb('Supports simple req&res', (it) => {
+    it.plan(1);
 
-    const requester = new Requester({ name: `${t.title}: simple requester` });
-    const responder = new Responder({ name: `${t.title}: simple responder` });
+    const requester = new Requester({ name: `${it.title}: simple requester` });
+    const responder = new Responder({ name: `${it.title}: simple responder` });
 
     requester.send({ type: 'test', args: [1, 2, 3] });
 
     responder.on('test', (req) => {
-        t.deepEqual(req.args, [1, 2, 3]);
-        t.end();
+        it.deepEqual(req.args, [1, 2, 3]);
+        it.end();
     });
 });
 
-test.cb('Supports keys', (t) => {
+test.cb('Supports keys', (it) => {
     const key = r.generate();
 
-    const requester = new Requester({ name: `${t.title}: keyed requester`, key });
-    const responder = new Responder({ name: `${t.title}: keyed responder`, key });
+    const requester = new Requester({ name: `${it.title}: keyed requester`, key });
+    const responder = new Responder({ name: `${it.title}: keyed responder`, key });
 
     requester.send({ type: 'test', args: [1, 2, 4] });
 
     responder.on('test', (req) => {
-        t.deepEqual(req.args, [1, 2, 4]);
-        t.end();
+        it.deepEqual(req.args, [1, 2, 4]);
+        it.end();
     });
 });
 
-test.cb('Supports namespaces', (t) => {
+test.cb('Supports namespaces', (it) => {
     const namespace = r.generate();
 
-    const requester = new Requester({ name: `${t.title}: ns requester`, namespace });
-    const responder = new Responder({ name: `${t.title}: ns responder`, namespace });
+    const requester = new Requester({ name: `${it.title}: ns requester`, namespace });
+    const responder = new Responder({ name: `${it.title}: ns responder`, namespace });
 
     requester.send({ type: 'test', args: [1, 2, 5] });
 
     responder.on('test', (req) => {
-        t.deepEqual(req.args, [1, 2, 5]);
-        t.end();
+        it.deepEqual(req.args, [1, 2, 5]);
+        it.end();
     });
 });
 
-test.cb('Supports keys & namespaces', (t) => {
+test.cb('Supports keys & namespaces', (it) => {
     const key = r.generate();
     const namespace = r.generate();
 
-    const requester = new Requester({ name: `RR ${t.title}: kns requester`, key, namespace });
-    const responder = new Responder({ name: `RR ${t.title}: kns responder`, key, namespace });
+    const requester = new Requester({ name: `RR ${it.title}: kns requester`, key, namespace });
+    const responder = new Responder({ name: `RR ${it.title}: kns responder`, key, namespace });
 
     requester.send({ type: 'test', args: [1, 2, 6] });
 
     responder.on('test', (req) => {
-        t.deepEqual(req.args, [1, 2, 6]);
-        t.end();
+        it.deepEqual(req.args, [1, 2, 6]);
+        it.end();
     });
 });
 
-test.cb('Responder throws unknown error', (t) => {
-    t.plan(1);
+test.cb('Responder throws unknown error', (it) => {
+    it.plan(1);
 
     const key = r.generate();
 
@@ -101,19 +101,19 @@ test.cb('Responder throws unknown error', (t) => {
             throw err;
         }
 
-        t.pass();
-        t.end();
+        it.pass();
+        it.end();
     });
 
-    const responder = new Responder({ name: `${t.title}: error throwing responder`, key });
+    const responder = new Responder({ name: `${it.title}: error throwing responder`, key });
     responder.sock.on('bind', () => responder.sock.server.emit('error', new Error('unknown error')));
 });
 
-test.cb('Does not try to reconnect twice to the same responder', (t) => {
+test.cb('Does not try to reconnect twice to the same responder', (it) => {
     const key = r.generate();
 
-    const requester = new Requester({ name: `${t.title}: keyed requester`, key });
-    const responder = new Responder({ name: `${t.title}: keyed responder`, key });
+    const requester = new Requester({ name: `${it.title}: keyed requester`, key });
+    const responder = new Responder({ name: `${it.title}: keyed responder`, key });
 
     responder.sock.on('connect', () => {
         const stub = sinon.stub(responder.discovery, 'hello');
@@ -128,8 +128,8 @@ test.cb('Does not try to reconnect twice to the same responder', (t) => {
                     (Requester.useHostNames ? s._host == obj.hostName : s.remoteAddress == address) &&
                     s.remotePort == obj.advertisement.port);
 
-                t.true(alreadyConnected);
-                t.end();
+                it.true(alreadyConnected);
+                it.end();
             });
         }, 8000);
     });

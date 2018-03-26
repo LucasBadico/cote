@@ -8,14 +8,14 @@ const { TimeBalancedRequester, Responder } = require('../')({ environment });
 
 LogSuppress.init(console);
 
-test.cb('Supports multiple responders with callback', (t) => {
+test.cb('Supports multiple responders with callback', (it) => {
     const key = r.generate();
-    t.plan(30);
+    it.plan(30);
 
-    const requester = new TimeBalancedRequester({ name: `${t.title}: keyed requester`, key });
-    const responder = new Responder({ name: `${t.title}: keyed responder`, key });
-    const responder2 = new Responder({ name: `${t.title}: keyed responder2`, key });
-    const responder3 = new Responder({ name: `${t.title}: keyed responder3`, key });
+    const requester = new TimeBalancedRequester({ name: `${it.title}: keyed requester`, key });
+    const responder = new Responder({ name: `${it.title}: keyed responder`, key });
+    const responder2 = new Responder({ name: `${it.title}: keyed responder2`, key });
+    const responder3 = new Responder({ name: `${it.title}: keyed responder3`, key });
 
     const responders = [responder, responder2, responder3];
 
@@ -24,19 +24,19 @@ test.cb('Supports multiple responders with callback', (t) => {
     }));
     async.timesLimit(30, 5, (time, done) => {
         requester.send({ type: 'test', args: [1, 2, time] }, (res) => {
-            t.pass();
+            it.pass();
             done();
         });
-    }, (err, results) => t.end());
+    }, (err, results) => it.end());
 });
 
-test.cb('Supports multiple responders with callback and disconnection', (t) => {
+test.cb('Supports multiple responders with callback and disconnection', (it) => {
     const key = r.generate();
 
-    const requester = new TimeBalancedRequester({ name: `${t.title}: keyed requester`, key });
-    const responder = new Responder({ name: `${t.title}: keyed responder`, key });
-    const responder2 = new Responder({ name: `${t.title}: keyed responder2`, key });
-    const responder3 = new Responder({ name: `${t.title}: keyed responder3`, key });
+    const requester = new TimeBalancedRequester({ name: `${it.title}: keyed requester`, key });
+    const responder = new Responder({ name: `${it.title}: keyed responder`, key });
+    const responder2 = new Responder({ name: `${it.title}: keyed responder2`, key });
+    const responder3 = new Responder({ name: `${it.title}: keyed responder3`, key });
 
     const responders = [responder, responder2, responder3];
 
@@ -47,7 +47,7 @@ test.cb('Supports multiple responders with callback and disconnection', (t) => {
     async.timesLimit(30, 5, (time, done) => {
         if (time == 7) responder2.close();
         if (time == 29) {
-            return t.end();
+            return it.end();
         }
         requester.send({ type: 'test', args: [1, 2, time] }, (res) => done());
     }, (err, results) => { });

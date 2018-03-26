@@ -29,17 +29,18 @@ module.exports = class Requester extends Monitorable(Configurable(Component)) {
     }
 
     send(...args) {
+        
         const hasCallback = 
             'boolean' === typeof args[args.length - 1] &&
             args[args.length - 1] === true &&
             arg.length > 2 &&
             'function' === typeof args[args.length - 2];
 
-        
+            
         const argsWithoutBollean = hasCallback ? R.dropLast(1, args) : 
-            args[args.length - 1] === false && !hasCallback ? R.dropLast(1, args) :
+            !args[args.length - 1] && !hasCallback ? R.dropLast(1, args) :
             args;
-    
+            console.log('FROM REQUESTER', { args, hasCallback, argsWithoutBollean })
         if (!hasCallback) {
             return new Promise((resolve, reject) => {
                 this.sock.send(...argsWithoutBollean, (err, res) => {

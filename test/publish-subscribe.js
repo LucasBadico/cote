@@ -8,17 +8,17 @@ const { Publisher, Subscriber } = require('../')();
 
 LogSuppress.init(console);
 
-test('Has no environment', (t) => {
-    t.is(Publisher.environment, '');
-    t.is(Subscriber.environment, '');
+test('Has no environment', (it) => {
+    it.is(Publisher.environment, '');
+    it.is(Subscriber.environment, '');
 });
 
-test.cb('Supports simple pub&sub', (t) => {
-    t.plan(2);
+test.cb('Supports simple pub&sub', (it) => {
+    it.plan(2);
 
-    const publisher = new Publisher({ name: `${t.title}: publisher` });
-    const subscriber = new Subscriber({ name: `${t.title}: subscriber` });
-    const subscriber2 = new Subscriber({ name: `${t.title}: subscriber2` });
+    const publisher = new Publisher({ name: `${it.title}: publisher` });
+    const subscriber = new Subscriber({ name: `${it.title}: subscriber` });
+    const subscriber2 = new Subscriber({ name: `${it.title}: subscriber2` });
 
     async.each(
         [subscriber, subscriber2],
@@ -27,7 +27,7 @@ test.cb('Supports simple pub&sub', (t) => {
     );
 
     const tester = (done, req) => {
-        t.deepEqual(req.args, [1, 2, 3]);
+        it.deepEqual(req.args, [1, 2, 3]);
         done();
     };
 
@@ -37,19 +37,19 @@ test.cb('Supports simple pub&sub', (t) => {
         (_) => {
             [publisher, subscriber, subscriber2].forEach((c) => c.close());
 
-            t.end();
+            it.end();
         }
     );
 });
 
-test.cb('Supports keys', (t) => {
+test.cb('Supports keys', (it) => {
     const key = r.generate();
 
-    t.plan(2);
+    it.plan(2);
 
-    const publisher = new Publisher({ name: `${t.title}: keyed publisher`, key });
-    const subscriber = new Subscriber({ name: `${t.title}: keyed subscriber`, key });
-    const subscriber2 = new Subscriber({ name: `${t.title}: keyed subscriber2`, key });
+    const publisher = new Publisher({ name: `${it.title}: keyed publisher`, key });
+    const subscriber = new Subscriber({ name: `${it.title}: keyed subscriber`, key });
+    const subscriber2 = new Subscriber({ name: `${it.title}: keyed subscriber2`, key });
 
     async.each(
         [subscriber, subscriber2],
@@ -58,7 +58,7 @@ test.cb('Supports keys', (t) => {
     );
 
     const tester = (done, req) => {
-        t.deepEqual(req.args, [1, 2, 4]);
+        it.deepEqual(req.args, [1, 2, 4]);
         done();
     };
 
@@ -68,19 +68,19 @@ test.cb('Supports keys', (t) => {
         (_) => {
             [publisher, subscriber, subscriber2].forEach((c) => c.close());
 
-            t.end();
+            it.end();
         }
     );
 });
 
-test.cb('Supports namespaces', (t) => {
+test.cb('Supports namespaces', (it) => {
     const namespace = r.generate();
 
-    t.plan(2);
+    it.plan(2);
 
-    const publisher = new Publisher({ name: `${t.title}: ns publisher`, namespace });
-    const subscriber = new Subscriber({ name: `${t.title}: ns subscriber`, namespace });
-    const subscriber2 = new Subscriber({ name: `${t.title}: ns subscriber2`, namespace });
+    const publisher = new Publisher({ name: `${it.title}: ns publisher`, namespace });
+    const subscriber = new Subscriber({ name: `${it.title}: ns subscriber`, namespace });
+    const subscriber2 = new Subscriber({ name: `${it.title}: ns subscriber2`, namespace });
 
     async.each(
         [subscriber, subscriber2],
@@ -89,7 +89,7 @@ test.cb('Supports namespaces', (t) => {
     );
 
     const tester = (done, req) => {
-        t.deepEqual(req.args, [1, 2, 5]);
+        it.deepEqual(req.args, [1, 2, 5]);
 
         done();
     };
@@ -100,20 +100,20 @@ test.cb('Supports namespaces', (t) => {
         (_) => {
             [publisher, subscriber, subscriber2].forEach((c) => c.close());
 
-            t.end();
+            it.end();
         }
     );
 });
 
-test.cb('Supports keys & namespaces', (t) => {
+test.cb('Supports keys & namespaces', (it) => {
     const key = r.generate();
     const namespace = r.generate();
 
-    t.plan(2);
+    it.plan(2);
 
-    const publisher = new Publisher({ name: `${t.title}: kns publisher`, key, namespace });
-    const subscriber = new Subscriber({ name: `${t.title}: kns subscriber`, key, namespace });
-    const subscriber2 = new Subscriber({ name: `${t.title}: kns subscriber2`, key, namespace });
+    const publisher = new Publisher({ name: `${it.title}: kns publisher`, key, namespace });
+    const subscriber = new Subscriber({ name: `${it.title}: kns subscriber`, key, namespace });
+    const subscriber2 = new Subscriber({ name: `${it.title}: kns subscriber2`, key, namespace });
 
     async.each(
         [subscriber, subscriber2],
@@ -122,7 +122,7 @@ test.cb('Supports keys & namespaces', (t) => {
     );
 
     const tester = (done, req) => {
-        t.deepEqual(req.args, [1, 2, 6]);
+        it.deepEqual(req.args, [1, 2, 6]);
 
         done();
     };
@@ -133,13 +133,13 @@ test.cb('Supports keys & namespaces', (t) => {
         (_) => {
             // [publisher, subscriber, subscriber2].forEach((c) => c.close());
 
-            t.end();
+            it.end();
         }
     );
 });
 
-test.cb('Publisher throws unknown error', (t) => {
-    t.plan(1);
+test.cb('Publisher throws unknown error', (it) => {
+    it.plan(1);
 
     const key = r.generate();
 
@@ -154,19 +154,19 @@ test.cb('Publisher throws unknown error', (t) => {
             throw err;
         }
 
-        t.pass();
-        t.end();
+        it.pass();
+        it.end();
     });
 
-    const publisher = new Publisher({ name: `${t.title}: error throwing publisher`, key });
+    const publisher = new Publisher({ name: `${it.title}: error throwing publisher`, key });
     publisher.sock.sock.on('bind', () => publisher.sock.sock.server.emit('error', new Error('unknown error')));
 });
 
-test.cb('Does not try to reconnect twice to the same publisher', (t) => {
+test.cb('Does not try to reconnect twice to the same publisher', (it) => {
     const key = r.generate();
 
-    const subscriber = new Subscriber({ name: `${t.title}: keyed subscriber`, key });
-    const publisher = new Publisher({ name: `${t.title}: keyed publisher`, key });
+    const subscriber = new Subscriber({ name: `${it.title}: keyed subscriber`, key });
+    const publisher = new Publisher({ name: `${it.title}: keyed publisher`, key });
 
     publisher.sock.sock.on('connect', () => {
         const stub = sinon.stub(publisher.discovery, 'hello');
@@ -181,8 +181,8 @@ test.cb('Does not try to reconnect twice to the same publisher', (t) => {
                     (Subscriber.useHostNames ? s._host == obj.hostName : s.remoteAddress == address) &&
                     s.remotePort == obj.advertisement.port);
 
-                t.true(alreadyConnected);
-                t.end();
+                it.true(alreadyConnected);
+                it.end();
             });
         }, 8000);
     });

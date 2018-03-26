@@ -7,8 +7,8 @@ const{ Publisher, Subscriber, MonitoringTool } = require('../')({ environment })
 
 LogSuppress.init(console);
 
-test.cb('Monitoring tool pub&sub', (t) => {
-    t.plan(4);
+test.cb('Monitoring tool pub&sub', (it) => {
+    it.plan(4);
 
     const key = r.generate();
 
@@ -23,8 +23,8 @@ test.cb('Monitoring tool pub&sub', (t) => {
     monitoringTool.monitor.on('status', (status) => {
         counter++;
 
-        t.is(status.id, subscriber.discovery.me.id);
-        t.is(status.nodes[0], publisher.discovery.me.id);
+        it.is(status.id, subscriber.discovery.me.id);
+        it.is(status.nodes[0], publisher.discovery.me.id);
 
         if (counter == 1) return;
 
@@ -34,7 +34,7 @@ test.cb('Monitoring tool pub&sub', (t) => {
         const original = subscriber.onMonitorInterval.bind(subscriber);
         subscriber.onMonitorInterval = () => {
             original();
-            t.end();
+            it.end();
             publisher.close();
             subscriber.close();
         };

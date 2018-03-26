@@ -16,7 +16,7 @@ function makeRequest() {
     console.log('sending request cb', req);
     randomRequest.send(req, function(res) {
         console.log('request cb', req, 'answer', res);
-    });
+    }, true);
 
     const reqPromise = {
         type: 'promised request',

@@ -7,25 +7,25 @@ const { Requester, Responder } = require('../')({ environment });
 
 LogSuppress.init(console);
 
-test('Instantiate a requester', (t) => {
+test('Instantiate a requester', (it) => {
     const key = r.generate();
-    const requester = new Requester({ name: `${t.title}: requester`, key });
+    const requester = new Requester({ name: `${it.title}: requester`, key });
 
-    t.is(requester.type, 'req');
+    it.is(requester.type, 'req');
 });
 
-test.cb('Discover and close a requester', (t) => {
-    t.plan(1);
+test.cb('Discover and close a requester', (it) => {
+    it.plan(1);
 
     const key = r.generate();
-    const requester = new Requester({ name: `${t.title}: ${key} requester`, key });
-    const responder = new Responder({ name: `${t.title}: ${key} responder`, key });
+    const requester = new Requester({ name: `${it.title}: ${key} requester`, key });
+    const responder = new Responder({ name: `${it.title}: ${key} responder`, key });
 
     responder.on('cote:added', () => requester.close());
     responder.on('cote:removed', (obj) => {
-        t.is(obj.advertisement.name, `${t.title}: ${key} requester`);
+        it.is(obj.advertisement.name, `${it.title}: ${key} requester`);
 
         responder.close();
-        t.end();
+        it.end();
     });
 });
