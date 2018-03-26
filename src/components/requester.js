@@ -1,3 +1,4 @@
+const R = require('ramda');
 const Configurable = require('./configurable');
 const Monitorable = require('./monitorable');
 const Component = require('./component');
@@ -33,16 +34,22 @@ module.exports = class Requester extends Monitorable(Configurable(Component)) {
             args[args.length - 1] === true &&
             arg.length > 2 &&
             'function' === typeof args[args.length - 2];
+
+        
+        const argsWithoutBollean = hasCallback ? R.dropLast(1, args) : 
+            args[args.length - 1] === false && !hasCallback ? R.dropLast(1, args) :
+            args;
+    
         if (!hasCallback) {
             return new Promise((resolve, reject) => {
-                this.sock.send(...args, (err, res) => {
+                this.sock.send(...argsWithoutBollean, (err, res) => {
                     if (err) return reject(err);
                     return resolve(res);
                 });
             });
         }
 
-       return this.sock.send(...args);
+       return this.sock.send(...argsWithoutBollean);
     }
 
     get type() {
