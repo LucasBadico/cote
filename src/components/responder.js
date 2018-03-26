@@ -10,10 +10,10 @@ module.exports = class Responder extends Configurable(Component) {
         this.sock = new axon.types[this.type]();
         this.sock.on('bind', () => this.startDiscovery());
 
-        this.sock.on('message', (req, cb) => {
+        this.sock.on('message', (req, ...args) => {
             if (!req.type) return;
 
-            this.emit(req.type, req, cb);
+            this.emit(req.type, req, ...args);
         });
 
         const onPort = (err, port) => {
@@ -37,15 +37,20 @@ module.exports = class Responder extends Configurable(Component) {
     }
 
     on(type, listener) {
-        super.on(type, (...args) => { // change here also
-
-            // he is thinking that my last arg is always a callback
+        super.on(type, (...args) => {
+            // resolution of listeners
             const rv = listener(...args);
+            const hasCallback = 
+                'boolean' === typeof args[args.length - 1] &&
+                args[args.length - 1] === true &&
+                arg.length > 1  &&
+                'function' === typeof args[args.length - 2];
 
-            if (rv && typeof rv.then == 'function') {
-                const cb = args.pop();
-                rv.then((val) => cb(null, val)).catch(cb);
+            if (hasCallback && 'function' === typeof rv.then) {
+                const cb = args[args.length - 2];
+                return rv.then((val) => cb(null, val)).catch(cb);
             }
+            return rv
         });
     }
 

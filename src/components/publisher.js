@@ -30,7 +30,7 @@ module.exports = class Publisher extends Configurable(Component) {
         }, onPort);
     }
 
-    publish(topic, data) {
+    publish(topic, ...args) {
         let namespace = '';
 
         if (this.advertisement.namespace)
@@ -38,7 +38,7 @@ module.exports = class Publisher extends Configurable(Component) {
 
         topic = 'message::' + namespace + topic;
 
-        this.sock.emit(topic, data);
+        this.sock.emit(topic, ...args);
     };
 
     get type() {
