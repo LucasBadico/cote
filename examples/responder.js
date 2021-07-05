@@ -11,7 +11,7 @@ const randomResponder = new Responder({
 });
 
 // request handlers are like any event handler.
-randomResponder.on('randomRequest', function(req, cb) {
+randomResponder.on('randomRequest', function(req, cb) { // change to two version
     const answer = ~~(Math.random() * 10);
     console.log('request', req.val, 'answering with', answer);
     cb(answer);

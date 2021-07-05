@@ -8,14 +8,14 @@ const { TimeBalancedRequester, Responder } = require('../')({ environment });
 
 LogSuppress.init(console);
 
-test.cb('Supports multiple responders with promise and disconnection', (t) => {
+test.cb('Supports multiple responders with promise and disconnection', (it) => {
     const key = r.generate();
 
-    const requester = new TimeBalancedRequester({ name: `${t.title}: keyed requester`, key });
-    const responder = new Responder({ name: `${t.title}: keyed responder`, key });
-    const responder2 = new Responder({ name: `${t.title}: keyed responder2`, key });
-    const responder3 = new Responder({ name: `${t.title}: keyed responder3`, key });
-    const responder4 = new Responder({ name: `${t.title}: keyed responder4`, key });
+    const requester = new TimeBalancedRequester({ name: `${it.title}: keyed requester`, key });
+    const responder = new Responder({ name: `${it.title}: keyed responder`, key });
+    const responder2 = new Responder({ name: `${it.title}: keyed responder2`, key });
+    const responder3 = new Responder({ name: `${it.title}: keyed responder3`, key });
+    const responder4 = new Responder({ name: `${it.title}: keyed responder4`, key });
 
     requester.CALCULATION_TIMEOUT = 1000;
 
@@ -36,7 +36,7 @@ test.cb('Supports multiple responders with promise and disconnection', (t) => {
 
     async.timesLimit(30, 5, (time, done) => {
         if (time == 10) responder.close();
-        if (time == 29) t.end();
+        if (time == 29) it.end();
 
         setTimeout(() => done(), 1000);
         requester.send({ type: 'test', args: [5, 2, time] })

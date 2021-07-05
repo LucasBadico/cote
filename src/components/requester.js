@@ -1,7 +1,8 @@
+const R = require('ramda');
 const Configurable = require('./configurable');
 const Monitorable = require('./monitorable');
 const Component = require('./component');
-const axon = require('@dashersw/axon');
+const axon = require('@LucasBadico/axon');
 
 module.exports = class Requester extends Monitorable(Configurable(Component)) {
     constructor(advertisement, discoveryOptions) {
@@ -27,17 +28,28 @@ module.exports = class Requester extends Monitorable(Configurable(Component)) {
         this.sock.connect(obj.advertisement.port, address);
     }
 
-    send(...args) {
-        if (args.length == 1 || typeof args[args.length - 1] != 'function') {
+    send(data, ...args) {
+        const hasCallback = 
+            'boolean' === typeof args[args.length - 1] &&
+            args[args.length - 1] === true &&
+            arg.length > 1 &&
+            'function' === typeof args[args.length - 2];
+
+        const argsWithoutBollean = 
+            hasCallback ? R.dropLast(1, args) : 
+            !args[args.length - 1] && !hasCallback ? R.dropLast(1, args) :
+            args;
+        
+        if (!hasCallback) {
             return new Promise((resolve, reject) => {
-                this.sock.send(...args, (err, res) => {
+                this.sock.send(data, (err, res) => {
                     if (err) return reject(err);
-                    resolve(res);
+                    return resolve(res, ...argsWithoutBollean);
                 });
             });
         }
 
-        this.sock.send(...args);
+       return this.sock.send(...argsWithoutBollean);
     }
 
     get type() {

@@ -1,5 +1,5 @@
 const Requester = require('./requester');
-const _ = require('lodash');
+const _ = require('lodash'); // remove lodash
 const uuid = require('uuid');
 
 module.exports = class PendingBalancedRequester extends Requester {
@@ -13,12 +13,14 @@ module.exports = class PendingBalancedRequester extends Requester {
 
     send(...args) {
         const sock = this.sock;
-
+        
+        // I also think that here is a point to change
         if (sock.socks.length) {
             sock.socks.forEach(function(s) {
                 s.count = 0;
             });
 
+            // just counting the callback numbers
             _.forEach(sock.callbacks, function(cb) {
                 cb.sock && cb.sock.count++;
             });
@@ -27,8 +29,12 @@ module.exports = class PendingBalancedRequester extends Requester {
         }
 
         const rv = Requester.prototype.send.apply(this, args);
+        console.log('RV?', rv, sock.socks.length);
 
-        if (!sock.socks.length) return rv;
+        if (!sock.socks.length) {
+            console.log('RV!', rv);
+            return rv;
+        }
 
         const sentSock = sock.socks[sock.n - 1];
 

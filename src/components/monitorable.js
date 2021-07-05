@@ -1,4 +1,4 @@
-const axon = require('@dashersw/axon');
+const axon = require('@LucasBadico/axon');
 
 module.exports = (Base) => class Monitorable extends Base {
     startDiscovery() {

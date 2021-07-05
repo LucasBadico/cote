@@ -1,6 +1,6 @@
 const Configurable = require('./configurable');
 const Component = require('./component');
-const axon = require('@dashersw/axon');
+const axon = require('@LucasBadico/axon');
 const portfinder = require('portfinder');
 
 module.exports = class Publisher extends Configurable(Component) {

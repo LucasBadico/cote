@@ -1,6 +1,6 @@
 {
   "name": "cote",
-  "version": "0.16.2",
+  "version": "0.16.2-koa",
   "keywords": [
     "microservices",
     "zero-configuration",
@@ -19,6 +19,7 @@
     "lint": "eslint src test",
     "lint-fix": "eslint --fix src test",
     "prepublish": "npm run build",
+    "postinstall": "npm run build",
     "test": "NODE_ENV=dev nyc -x=\"**/examples/*\" -x=\"**/*balanced*.js\" -x=\"**/test/*.js\" ava --timeout=60000"
   },
   "author": {
@@ -32,7 +33,7 @@
     "node": ">=v4.0.0"
   },
   "dependencies": {
-    "@dashersw/axon": "2.0.5",
+    "@LucasBadico/axon": "https://github.com/LucasBadico/axon.git",
     "@dashersw/node-discover": "^0.8.2",
     "charm": "1.0.2",
     "colors": "1.1.2",

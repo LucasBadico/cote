@@ -8,39 +8,39 @@ const { TimeBalancedRequester, Responder } = require('../')({ environment });
 
 LogSuppress.init(console);
 
-test('Supports environment', (t) => {
-    t.is(TimeBalancedRequester.environment, `${environment}:`);
-    t.is(Responder.environment, `${environment}:`);
+test('Supports environment', (it) => {
+    it.is(TimeBalancedRequester.environment, `${environment}:`);
+    it.is(Responder.environment, `${environment}:`);
 });
 
-test.cb('Supports simple req&res', (t) => {
-    t.plan(1);
+test.cb('Supports simple req&res', (it) => {
+    it.plan(1);
 
-    const requester = new TimeBalancedRequester({ name: `${t.title}: simple requester` });
-    const responder = new Responder({ name: `${t.title}: simple responder` });
+    const requester = new TimeBalancedRequester({ name: `${it.title}: simple requester` });
+    const responder = new Responder({ name: `${it.title}: simple responder` });
 
     requester.send({ type: 'test', args: [1, 2, 3] });
 
     responder.on('test', (req) => {
-        t.deepEqual(req.args, [1, 2, 3]);
-        t.end();
+        it.deepEqual(req.args, [1, 2, 3]);
+        it.end();
     });
 });
 
-test.cb('Supports keys & namespaces', (t) => {
+test.cb('Supports keys & namespaces', (it) => {
     const key = r.generate();
     const namespace = r.generate();
 
-    const requester = new TimeBalancedRequester({ name: `TBR ${t.title}: kns requester`, key, namespace });
-    const responder = new Responder({ name: `TBR ${t.title}: kns responder`, key, namespace });
+    const requester = new TimeBalancedRequester({ name: `TBR ${it.title}: kns requester`, key, namespace });
+    const responder = new Responder({ name: `TBR ${it.title}: kns responder`, key, namespace });
 
     requester.send({ type: 'test', args: [1, 2, 6] });
 
     responder.on('test', (req) => {
         responder.close();
         requester.close();
-        t.deepEqual(req.args, [1, 2, 6]);
-        t.end();
+        it.deepEqual(req.args, [1, 2, 6]);
+        it.end();
     });
 });
 

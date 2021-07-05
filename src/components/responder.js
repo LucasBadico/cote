@@ -1,4 +1,5 @@
-const axon = require('@dashersw/axon');
+const R = require('ramda');
+const axon = require('@LucasBadico/axon');
 const portfinder = require('portfinder');
 const Configurable = require('./configurable');
 const Component = require('./component');
@@ -37,12 +38,19 @@ module.exports = class Responder extends Configurable(Component) {
     }
 
     on(type, listener) {
+        var selfOn = this;
         super.on(type, (...args) => {
+            var selfSuper = this;
             const rv = listener(...args);
 
             if (rv && typeof rv.then == 'function') {
                 const cb = args.pop();
-                rv.then((val) => cb(null, val)).catch(cb);
+                if (typeof cb === 'function') {
+                    rv.then((...args) => cb(null, ...args)).catch((...args) => cb(...args));
+                } else {
+    
+                }
+               
             }
         });
     }

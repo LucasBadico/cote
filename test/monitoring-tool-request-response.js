@@ -13,13 +13,13 @@ const { Requester, Responder, MonitoringTool } = require('../')({
 
 LogSuppress.init(console);
 
-test.cb('Discover req&res', (t) => {
-    t.plan(4);
+test.cb('Discover req&res', (it) => {
+    it.plan(4);
 
     const key = r.generate();
 
-    const requester = new Requester({ name: `${t.title}: monitor requester`, key });
-    const responder = new Responder({ name: `${t.title}: monitor responder`, key });
+    const requester = new Requester({ name: `${it.title}: monitor requester`, key });
+    const responder = new Responder({ name: `${it.title}: monitor responder`, key });
 
     const monitoringTool = new MonitoringTool();
     const monitoringTool2 = new MonitoringTool();
@@ -29,8 +29,8 @@ test.cb('Discover req&res', (t) => {
     monitoringTool.monitor.on('status', (status) => {
         counter++;
 
-        t.is(status.id, requester.discovery.me.id);
-        t.is(status.nodes[0], responder.discovery.me.id);
+        it.is(status.id, requester.discovery.me.id);
+        it.is(status.nodes[0], responder.discovery.me.id);
 
         if (counter == 1) return;
 
@@ -40,26 +40,26 @@ test.cb('Discover req&res', (t) => {
         const original = requester.onMonitorInterval.bind(requester);
         requester.onMonitorInterval = () => {
             original();
-            t.end();
+            it.end();
         };
     });
 });
 
-test.serial.cb('Render index.html', (t) => {
+test.serial.cb('Render index.html', (it) => {
     const monitoringTool = new MonitoringTool();
 
     monitoringTool.server.on('listening', (s) => {
         const { address, port } = monitoringTool.server.address();
         setTimeout(() => {
             request.get(`http://${address}:${port}`, (err, response, body) => {
-                t.is(body, fs.readFileSync('./src/monitoring-tool/frontend/index.html', 'utf8'));
-                t.end();
+                it.is(body, fs.readFileSync('./src/monitoring-tool/frontend/index.html', 'utf8'));
+                it.end();
             });
         }, 1000);
     });
 });
 
-test.serial.cb('Cannot render index.html', (t) => {
+test.serial.cb('Cannot render index.html', (it) => {
     const monitoringTool = new MonitoringTool();
 
     monitoringTool.server.on('listening', (s) => {
@@ -68,26 +68,26 @@ test.serial.cb('Cannot render index.html', (t) => {
         const stub = sinon.stub(fs, 'readFile').callsFake((filename, cb) => cb('error!'));
 
         request.get(`http://${address}:${port}`, (err, response, body) => {
-            t.is(response.statusCode, 500);
-            t.is(body, 'Error loading index.html');
+            it.is(response.statusCode, 500);
+            it.is(body, 'Error loading index.html');
 
             stub.restore();
-            t.end();
+            it.end();
         });
     });
 });
 
-test.serial.cb('Receive status from another process', (t) => {
+test.serial.cb('Receive status from another process', (it) => {
     const monitoringTool = new MonitoringTool();
 
-    monitoringTool.monitor.on('status', () => p1.kill() && p2.kill() && t.end());
+    monitoringTool.monitor.on('status', () => p1.kill() && p2.kill() && it.end());
 
     const p1 = childProcess.fork('./examples/requester.js', { env: { COTE_ENV: environment }, silent: true });
     const p2 = childProcess.fork('./examples/responder.js', { env: { COTE_ENV: environment }, silent: true });
 });
 
-test.serial.cb('Server throws unknown error', (t) => {
-    t.plan(1);
+test.serial.cb('Server throws unknown error', (it) => {
+    it.plan(1);
 
     const originalListeners = process.listeners('uncaughtException');
 
@@ -100,8 +100,8 @@ test.serial.cb('Server throws unknown error', (t) => {
             throw err;
         }
 
-        t.pass();
-        t.end();
+        it.pass();
+        it.end();
     });
 
     const monitoringTool = new MonitoringTool();
